@@ -1,0 +1,11 @@
+{
+    "rust-analyzer.cargo.features": [
+        "ch32v-hal/ch32v307"
+    ],
+    "rust-analyzer.cargo.target": "riscv32imac-unknown-none-elf",
+    "rust-analyzer.linkedProjects": [
+      "hal/Cargo.toml",
+      "examples/ch32v307/Cargo.toml",
+    ],
+
+}

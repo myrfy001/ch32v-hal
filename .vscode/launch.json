@@ -1,0 +1,53 @@
+{
+    "configurations": [
+        {   
+            "cwd": "${workspaceFolder}",
+            "gdbPath": "D:/xpack-riscv-none-embed-gcc-10.2.0-1.2/bin/riscv-none-embed-gdb.exe",
+            "executable": "${workspaceFolder}/examples/ch32v307/target/riscv32i-unknown-none-elf/debug/rcc",
+            "name": "Debug with OpenOCD",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "serverpath": "D:/MounRiver/MounRiver_Studio/toolchain/OpenOCD/bin/openocd.exe",
+            "configFiles": [
+                "D:/MounRiver/MounRiver_Studio/toolchain/OpenOCD/bin/wch-riscv.cfg"
+            ],
+            "openOCDLaunchCommands": [
+                // "init",
+                // "halt",
+                // "flash erase_sector wch_riscv 0 last",
+                // "init",
+                // "halt",
+                // "program D:/study/ch32v307-demo/target/riscv32i-unknown-none-elf/debug/ch32v307-demo",
+                // "init",
+                // "halt",
+                // "verify_image  D:/study/ch32v307-demo/target/riscv32i-unknown-none-elf/debug/ch32v307-demo",
+                // "init",
+                // "halt",
+                // "wlink_reset_resume"
+            ],
+            "searchDir": [],
+            "runToEntryPoint": "main",
+            "showDevDebugOutput": "none",
+            "svdFile": "CH32V307xx.svd",
+            "console":"integratedTerminal",
+        },
+
+        {
+            "cwd": "${workspaceFolder}",
+            "gdbPath": "D:/xpack-riscv-none-embed-gcc-10.2.0-1.2/bin/riscv-none-embed-gdb.exe",
+            "executable": "${workspaceFolder}/target/riscv32i-unknown-none-elf/debug/ch32v307-demo",
+            "name": "Attach Debugger with OpenOCD",
+            "request": "attach",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "serverpath": "D:/MounRiver/MounRiver_Studio/toolchain/OpenOCD/bin/openocd.exe",
+            "configFiles": [
+                "./openocd-attach.cfg"
+            ],
+            "searchDir": [],
+            "showDevDebugOutput": "none",
+            "svdFile": "CH32V307xx.svd",
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+[package]
+name = "ch32v307-demo"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+ch32v3 = "0.1.2"
+riscv = "0.9.0"
+riscv-rt = "0.9.0"
+ch32v-hal = {path="../../hal", features=["ch32v307"]}
+fugit = "0.3.6"
+
+[profile.dev]
+opt-level=0

@@ -1,0 +1,27 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "erase mcu",
+            "type": "shell",
+            "command": "D:/MounRiver/MounRiver_Studio/toolchain/OpenOCD/bin/openocd.exe -f \"D:/MounRiver/MounRiver_Studio/toolchain/OpenOCD/bin/wch-riscv.cfg\" -c init -c halt -c \"flash erase_sector wch_riscv 0 last\" -c exit"
+        },
+        {
+            "label": "program mcu",
+            "type": "shell",
+            "command": "D:/MounRiver/MounRiver_Studio/toolchain/OpenOCD/bin/openocd.exe -f \"D:/MounRiver/MounRiver_Studio/toolchain/OpenOCD/bin/wch-riscv.cfg\" -c init -c halt -c \"program D:/study/ch32v-hal/examples/ch32v307/target/riscv32i-unknown-none-elf/debug/rcc\" -c exit",
+            "dependsOn": "erase mcu"
+        },
+        {
+            "label": "verify mcu",
+            "type": "shell",
+            "command": "D:/MounRiver/MounRiver_Studio/toolchain/OpenOCD/bin/openocd.exe -f \"D:/MounRiver/MounRiver_Studio/toolchain/OpenOCD/bin/wch-riscv.cfg\" -c init -c halt -c \"verify_image  D:/study/ch32v-hal/examples/ch32v307/target/riscv32i-unknown-none-elf/debug/rcc\" -c exit",
+            "dependsOn": "program mcu",
+            "problemMatcher": [
+                "$rustc"
+            ]
+        }
+    ]
+}
