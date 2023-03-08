@@ -9,12 +9,10 @@
 //! let mut gpioa = dp.GPIOA.split();
 //! ```
 //!
-//! This gives you a struct containing two control registers `crl` and `crh`, and all the pins
-//! `px0..px15`. These structs are what you use to interract with the pins to change their modes,
-//! or their inputs or outputs. For example, to set `pa5` high, you would call
+//! For example, to set `pa5` high, you would call
 //!
 //! ```rust
-//! let output = gpioa.pa5.into_push_pull_output(&mut gpioa.crl);
+//! let output = gpioa.pa5.into_push_pull_output();
 //! output.set_high();
 //! ```
 //!
@@ -69,7 +67,7 @@
 //! This is done using `embedded-hal::digital::v1_compat::OldOutputPin`. For example:
 //!
 //! ```rust
-//! let nss = gpioa.pa4.into_push_pull_output(&mut gpioa.crl);
+//! let nss = gpioa.pa4.into_push_pull_output();
 //! let mut mfrc522 = Mfrc522::new(spi, OldOutputPin::from(nss)).unwrap();
 //! ```
 
@@ -111,7 +109,7 @@ pub trait PinExt {
 ///
 /// Initially all pins are set to the maximum slew rate
 pub trait OutputSpeed: HL {
-    fn set_speed(&mut self, cr: &mut Self::Cr, speed: IOPinSpeed);
+    fn set_speed(&mut self, speed: IOPinSpeed);
 }
 
 /// Extension trait to split a GPIO peripheral in independent pins and registers
@@ -724,9 +722,8 @@ where
     #[inline]
     pub fn into_alternate_push_pull(
         mut self,
-        cr: &mut <Self as HL>::Cr,
     ) -> Pin<P, N, Alternate<PushPull>> {
-        self.mode::<Alternate<PushPull>>(cr);
+        self.mode::<Alternate<PushPull>>();
         Pin::new()
     }
 
@@ -735,38 +732,37 @@ where
     #[inline]
     pub fn into_alternate_open_drain(
         mut self,
-        cr: &mut <Self as HL>::Cr,
     ) -> Pin<P, N, Alternate<OpenDrain>> {
-        self.mode::<Alternate<OpenDrain>>(cr);
+        self.mode::<Alternate<OpenDrain>>();
         Pin::new()
     }
 
     /// Configures the pin to operate as a floating input pin
     #[inline]
-    pub fn into_floating_input(mut self, cr: &mut <Self as HL>::Cr) -> Pin<P, N, Input<Floating>> {
-        self.mode::<Input<Floating>>(cr);
+    pub fn into_floating_input(mut self) -> Pin<P, N, Input<Floating>> {
+        self.mode::<Input<Floating>>();
         Pin::new()
     }
 
     /// Configures the pin to operate as a pulled down input pin
     #[inline]
-    pub fn into_pull_down_input(mut self, cr: &mut <Self as HL>::Cr) -> Pin<P, N, Input<PullDown>> {
-        self.mode::<Input<PullDown>>(cr);
+    pub fn into_pull_down_input(mut self) -> Pin<P, N, Input<PullDown>> {
+        self.mode::<Input<PullDown>>();
         Pin::new()
     }
 
     /// Configures the pin to operate as a pulled up input pin
     #[inline]
-    pub fn into_pull_up_input(mut self, cr: &mut <Self as HL>::Cr) -> Pin<P, N, Input<PullUp>> {
-        self.mode::<Input<PullUp>>(cr);
+    pub fn into_pull_up_input(mut self) -> Pin<P, N, Input<PullUp>> {
+        self.mode::<Input<PullUp>>();
         Pin::new()
     }
 
     /// Configures the pin to operate as an open-drain output pin.
     /// Initial state will be low.
     #[inline]
-    pub fn into_open_drain_output(self, cr: &mut <Self as HL>::Cr) -> Pin<P, N, Output<OpenDrain>> {
-        self.into_open_drain_output_with_state(cr, PinState::Low)
+    pub fn into_open_drain_output(self) -> Pin<P, N, Output<OpenDrain>> {
+        self.into_open_drain_output_with_state(PinState::Low)
     }
 
     /// Configures the pin to operate as an open-drain output pin.
@@ -774,19 +770,18 @@ where
     #[inline]
     pub fn into_open_drain_output_with_state(
         mut self,
-        cr: &mut <Self as HL>::Cr,
         initial_state: PinState,
     ) -> Pin<P, N, Output<OpenDrain>> {
         self._set_state(initial_state);
-        self.mode::<Output<OpenDrain>>(cr);
+        self.mode::<Output<OpenDrain>>();
         Pin::new()
     }
 
     /// Configures the pin to operate as an push-pull output pin.
     /// Initial state will be low.
     #[inline]
-    pub fn into_push_pull_output(self, cr: &mut <Self as HL>::Cr) -> Pin<P, N, Output<PushPull>> {
-        self.into_push_pull_output_with_state(cr, PinState::Low)
+    pub fn into_push_pull_output(self) -> Pin<P, N, Output<PushPull>> {
+        self.into_push_pull_output_with_state(PinState::Low)
     }
 
     /// Configures the pin to operate as an push-pull output pin.
@@ -794,18 +789,17 @@ where
     #[inline]
     pub fn into_push_pull_output_with_state(
         mut self,
-        cr: &mut <Self as HL>::Cr,
         initial_state: PinState,
     ) -> Pin<P, N, Output<PushPull>> {
         self._set_state(initial_state);
-        self.mode::<Output<PushPull>>(cr);
+        self.mode::<Output<PushPull>>();
         Pin::new()
     }
 
     /// Configures the pin to operate as an analog input pin
     #[inline]
-    pub fn into_analog(mut self, cr: &mut <Self as HL>::Cr) -> Pin<P, N, Analog> {
-        self.mode::<Analog>(cr);
+    pub fn into_analog(mut self) -> Pin<P, N, Analog> {
+        self.mode::<Analog>();
         Pin::new()
     }
 
@@ -813,8 +807,8 @@ where
     /// and output without changing the type. It starts out
     /// as a floating input
     #[inline]
-    pub fn into_dynamic(mut self, cr: &mut <Self as HL>::Cr) -> Pin<P, N, Dynamic> {
-        self.mode::<Input<Floating>>(cr);
+    pub fn into_dynamic(mut self) -> Pin<P, N, Dynamic> {
+        self.mode::<Input<Floating>>();
         Pin::new()
     }
 }
@@ -830,13 +824,12 @@ macro_rules! impl_temp_output {
         #[inline]
         pub fn $fn_name(
             &mut self,
-            cr: &mut <Self as HL>::Cr,
             mut f: impl FnMut(&mut Pin<P, N, $mode>),
         ) {
-            self.mode::<$mode>(cr);
+            self.mode::<$mode>();
             let mut temp = Pin::<P, N, $mode>::new();
             f(&mut temp);
-            self.mode::<$mode>(cr);
+            self.mode::<$mode>();
             Self::new();
         }
 
@@ -848,15 +841,14 @@ macro_rules! impl_temp_output {
         #[inline]
         pub fn $stateful_fn_name(
             &mut self,
-            cr: &mut <Self as HL>::Cr,
             state: PinState,
             mut f: impl FnMut(&mut Pin<P, N, $mode>),
         ) {
             self._set_state(state);
-            self.mode::<$mode>(cr);
+            self.mode::<$mode>();
             let mut temp = Pin::<P, N, $mode>::new();
             f(&mut temp);
-            self.mode::<$mode>(cr);
+            self.mode::<$mode>();
             Self::new();
         }
     };
@@ -867,13 +859,12 @@ macro_rules! impl_temp_input {
         #[inline]
         pub fn $fn_name(
             &mut self,
-            cr: &mut <Self as HL>::Cr,
             mut f: impl FnMut(&mut Pin<P, N, $mode>),
         ) {
-            self.mode::<$mode>(cr);
+            self.mode::<$mode>();
             let mut temp = Pin::<P, N, $mode>::new();
             f(&mut temp);
-            self.mode::<$mode>(cr);
+            self.mode::<$mode>();
             Self::new();
         }
     };
@@ -904,7 +895,7 @@ where
     Self: HL,
 {
     #[inline(always)]
-    fn cr_modify(&mut self, _cr: &mut <Self as HL>::Cr, f: impl FnOnce(u32) -> u32) {
+    fn cr_modify(&mut self, f: impl FnOnce(u32) -> u32) {
         let gpio = unsafe { &(*Gpio::<P>::ptr()) };
 
         match N {
@@ -919,8 +910,8 @@ where
     }
 
     #[inline(always)]
-    fn _set_speed(&mut self, cr: &mut <Self as HL>::Cr, speed: IOPinSpeed) {
-        self.cr_modify(cr, |r_bits| {
+    fn _set_speed(&mut self, speed: IOPinSpeed) {
+        self.cr_modify(|r_bits| {
             (r_bits & !(0b11 << Self::OFFSET)) | ((speed as u32) << Self::OFFSET)
         });
     }
@@ -930,8 +921,8 @@ impl<const P: char, const N: u8, MODE> OutputSpeed for Pin<P, N, Output<MODE>>
 where
     Self: HL,
 {
-    fn set_speed(&mut self, cr: &mut <Self as HL>::Cr, speed: IOPinSpeed) {
-        self._set_speed(cr, speed)
+    fn set_speed(&mut self, speed: IOPinSpeed) {
+        self._set_speed(speed)
     }
 }
 
@@ -939,8 +930,8 @@ impl<const P: char, const N: u8> OutputSpeed for Pin<P, N, Alternate<PushPull>>
 where
     Self: HL,
 {
-    fn set_speed(&mut self, cr: &mut <Self as HL>::Cr, speed: IOPinSpeed) {
-        self._set_speed(cr, speed)
+    fn set_speed(&mut self, speed: IOPinSpeed) {
+        self._set_speed(speed)
     }
 }
 
@@ -951,37 +942,37 @@ where
     Self: HL,
 {
     #[inline]
-    pub fn make_pull_up_input(&mut self, cr: &mut <Self as HL>::Cr) {
+    pub fn make_pull_up_input(&mut self) {
         // NOTE(unsafe), we have a mutable reference to the current pin
-        self.mode::<Input<PullUp>>(cr);
+        self.mode::<Input<PullUp>>();
         self.mode = Dynamic::InputPullUp;
     }
 
     #[inline]
-    pub fn make_pull_down_input(&mut self, cr: &mut <Self as HL>::Cr) {
+    pub fn make_pull_down_input(&mut self) {
         // NOTE(unsafe), we have a mutable reference to the current pin
-        self.mode::<Input<PullDown>>(cr);
+        self.mode::<Input<PullDown>>();
         self.mode = Dynamic::InputPullDown;
     }
 
     #[inline]
-    pub fn make_floating_input(&mut self, cr: &mut <Self as HL>::Cr) {
+    pub fn make_floating_input(&mut self) {
         // NOTE(unsafe), we have a mutable reference to the current pin
-        self.mode::<Input<Floating>>(cr);
+        self.mode::<Input<Floating>>();
         self.mode = Dynamic::InputFloating;
     }
 
     #[inline]
-    pub fn make_push_pull_output(&mut self, cr: &mut <Self as HL>::Cr) {
+    pub fn make_push_pull_output(&mut self) {
         // NOTE(unsafe), we have a mutable reference to the current pin
-        self.mode::<Output<PushPull>>(cr);
+        self.mode::<Output<PushPull>>();
         self.mode = Dynamic::OutputPushPull;
     }
 
     #[inline]
-    pub fn make_open_drain_output(&mut self, cr: &mut <Self as HL>::Cr) {
+    pub fn make_open_drain_output(&mut self) {
         // NOTE(unsafe), we have a mutable reference to the current pin
-        self.mode::<Output<OpenDrain>>(cr);
+        self.mode::<Output<OpenDrain>>();
         self.mode = Dynamic::OutputOpenDrain;
     }
 }
@@ -1032,7 +1023,7 @@ impl<const P: char, const N: u8, M> Pin<P, N, M>
 where
     Self: HL,
 {
-    fn mode<MODE: PinMode>(&mut self, cr: &mut <Self as HL>::Cr) {
+    fn mode<MODE: PinMode>(&mut self, ) {
         let gpio = unsafe { &(*Gpio::<P>::ptr()) };
 
         // Input<PullUp> or Input<PullDown> mode
@@ -1046,7 +1037,7 @@ where
 
         let bits = (MODE::CNF << 2) | MODE::MODE;
 
-        self.cr_modify(cr, |r_bits| {
+        self.cr_modify(|r_bits| {
             (r_bits & !(0b1111 << Self::OFFSET)) | (bits << Self::OFFSET)
         });
     }
