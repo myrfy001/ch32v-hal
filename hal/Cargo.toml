@@ -16,6 +16,8 @@ fugit = "0.3.6"
 
 [features]
 
+device-selected = []
+
 offical-embedded-hal = []
 
 
@@ -26,4 +28,4 @@ ch32v2 = []
 ch32v3 = []
 
 # chip features
-ch32v307 = []
+ch32v307 = ["device-selected"]

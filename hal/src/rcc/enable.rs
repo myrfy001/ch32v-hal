@@ -65,6 +65,9 @@ bus! {
     GPIOE => (APB2, 6),
 }
 
+bus! {
+    AFIO => (APB2, 0),
+}
 
 #[cfg(feature = "rng")]
 bus! {
