@@ -61,7 +61,7 @@ impl ECR {
     }
 }
 
-/// AF remap and debug I/O configuration register (MAPR)
+/// AF remap and debug I/O configuration register (PCFR)
 ///
 /// Aquired through the [Parts](struct.Parts.html) struct.
 ///
@@ -69,7 +69,7 @@ impl ECR {
 /// let dp = pac::Peripherals::take().unwrap();
 /// let mut rcc = dp.RCC.constrain();
 /// let mut afio = dp.AFIO.constrain();
-/// function_using_mapr(&mut afio.mapr);
+/// function_using_pcfr(&mut afio.pcfr);
 /// ```
 pub struct PCFR {
     _0: (),
@@ -81,7 +81,7 @@ impl PCFR {
         unsafe { &(*AFIO::ptr()).pcfr }
     }
 
-    pub fn modify_mapr<F>(&mut self, mod_fn: F)
+    pub fn modify_pcfr<F>(&mut self, mod_fn: F)
     where
         F: for<'w> FnOnce(&afio::pcfr::R, &'w mut afio::pcfr::W) -> &'w mut afio::pcfr::W,
     {
@@ -104,7 +104,7 @@ impl PCFR {
     ) {
         self.jtag_enabled = false;
         // Avoid duplicating swj_cfg write code
-        self.modify_mapr(|_, w| w);
+        self.modify_pcfr(|_, w| w);
 
         // NOTE(unsafe) The pins are now in the good state.
         unsafe { (pa15.activate(), pb3.activate(), pb4.activate()) }
