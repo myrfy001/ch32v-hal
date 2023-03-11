@@ -56,7 +56,7 @@
 //! ## Accessing PA15, PB3, and PB14
 //!
 //! These pins are used by the JTAG peripheral by default. To use them in your program, you need to
-//! disable that peripheral. This is done using the [afio::MAPR::disable_jtag](../afio/struct.MAPR.html#method.disable_jtag) function
+//! disable that peripheral. This is done using the [afio::PCFR::disable_jtag](../afio/struct.PCFR.html#method.disable_jtag) function
 //!
 //! # Interfacing with v1 traits
 //!

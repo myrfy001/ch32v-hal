@@ -130,7 +130,7 @@ macro_rules! dma {
             pub mod $dmaX {
                 use core::{sync::atomic::{self, Ordering}, ptr, mem, convert::TryFrom};
 
-                use crate::pac::{RCC, $DMAX, dma2};
+                use crate::pac::{RCC, $DMAX, $dmaX};
 
                 use crate::dma::{CircBuffer, DmaExt, Error, Event, Half, Transfer, W, RxDma, TxDma, RxTxDma, TransferPayload};
                 use crate::rcc::Enable;
@@ -209,28 +209,28 @@ macro_rules! dma {
                         //     unsafe { &(*$DMAX::ptr()).$chX }
                         // }
 
-                        fn cfgr(&self) -> &dma2::$CFGRX {
+                        fn cfgr(&self) -> &$dmaX::$CFGRX {
                             unsafe { &(*$DMAX::ptr()).$cfgrX }
                         }
 
-                        fn cntr(&self) -> &dma2::$CNTRX {
+                        fn cntr(&self) -> &$dmaX::$CNTRX {
                             unsafe { &(*$DMAX::ptr()).$cntrX }
                         }
 
-                        fn maddr(&self) -> &dma2::$MADDRX {
+                        fn maddr(&self) -> &$dmaX::$MADDRX {
                             unsafe { &(*$DMAX::ptr()).$maddrX }
                         }
 
-                        fn paddr(&self) -> &dma2::$PADDRX {
+                        fn paddr(&self) -> &$dmaX::$PADDRX {
                             unsafe { &(*$DMAX::ptr()).$paddrX }
                         }
 
-                        pub fn intfr(&self) -> dma2::$intfrX::R {
+                        pub fn intfr(&self) -> $dmaX::$intfrX::R {
                             // NOTE(unsafe) atomic read with no side effects
                             unsafe { (*$DMAX::ptr()).$intfrX.read() }
                         }
 
-                        pub fn intfcr(&self) -> &dma2::$INTFCRX {
+                        pub fn intfcr(&self) -> &$dmaX::$INTFCRX {
                             unsafe { &(*$DMAX::ptr()).$intfcrX }
                         }
 
