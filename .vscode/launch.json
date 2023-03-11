@@ -1,5 +1,24 @@
 {
     "configurations": [
+        {
+            "type": "probe-rs-debug",
+            "request": "launch",
+            "name": "probe-rs Test",
+            "cwd": "${workspaceFolder}",
+            "connectUnderReset": false,
+            "chip": "STM32H745ZITx",
+            "flashingConfig": {
+                "flashingEnabled": true,
+                "resetAfterFlashing": true,
+                "haltAfterReset": true
+            },
+            "coreConfigs": [
+                {
+                    "coreIndex": 0,
+                    "programBinary": "./examples/ch32v307/target/riscv32i-unknown-none-elf/debug/rcc"
+                }
+            ]
+        },
         {   
             "cwd": "${workspaceFolder}",
             "gdbPath": "D:/xpack-riscv-none-embed-gcc-10.2.0-1.2/bin/riscv-none-embed-gdb.exe",
