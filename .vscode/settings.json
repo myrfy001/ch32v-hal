@@ -5,7 +5,7 @@
     "rust-analyzer.cargo.target": "riscv32imac-unknown-none-elf",
     "rust-analyzer.linkedProjects": [
       "hal/Cargo.toml",
-      // "examples/ch32v307/Cargo.toml",
+      "examples/ch32v307/Cargo.toml",
     ],
     "rust-analyzer.checkOnSave.allTargets": false,  // https://github.com/rust-lang/rust-analyzer/issues/3297
 

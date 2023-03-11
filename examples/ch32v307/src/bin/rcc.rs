@@ -5,7 +5,7 @@ use core::panic::PanicInfo;
 use riscv::asm;
 use riscv_rt::entry;
 
-use ch32v_hal::{self, prelude::*};
+use ch32v_hal::{self, pac, prelude::*};
 use fugit::HertzU32;
 
 
@@ -34,10 +34,10 @@ fn main() -> ! {
     .pclk2(HertzU32::MHz(8 as u32))
     .freeze();
     
-    let peripherals = ch32v3::Peripherals::take().unwrap();
+    let peripherals = pac::Peripherals::take().unwrap();
     let clocks = peripherals.RCC.constrain().do_setup(&clock_calc);
 
-    let x = unsafe{ch32v3::Peripherals::steal()};
+    let x = unsafe{pac::Peripherals::steal()};
     x.RCC.apb2pcenr.modify(|_,w| w.iopden().set_bit());
     x.GPIOD.cfghr.modify(|_, w| unsafe{w.mode14().bits(0x03).cnf14().bits(0x01)});
 
