@@ -1,5 +1,6 @@
 pub use fugit::ExtU32 as _fugit_DurationExtU32;
 pub use fugit::RateExtU32 as _fugit_RateExtU32;
+pub use crate::time::U32Ext as _stm32_hal_time_U32Ext;
 
 pub use crate::rcc::RccExt as _ch32v_hal_rcc_RccExt;
 pub use crate::afio::AfioExt as _stm32_hal_afio_AfioExt;
