@@ -839,10 +839,6 @@ macro_rules! serialdma {
             }
 
             impl $rxdma {
-                #[deprecated(since = "0.7.1", note = "Please use release instead")]
-                pub fn split(self) -> (Rx<$USARTX>, $dmarxch) {
-                    self.release()
-                }
                 pub fn release(mut self) -> (Rx<$USARTX>, $dmarxch) {
                     self.stop();
                     unsafe { (*$USARTX::ptr()).ctlr3.modify(|_, w| w.dmar().clear_bit()); }
@@ -855,10 +851,6 @@ macro_rules! serialdma {
             }
 
             impl $txdma {
-                #[deprecated(since = "0.7.1", note = "Please use release instead")]
-                pub fn split(self) -> (Tx<$USARTX>, $dmatxch) {
-                    self.release()
-                }
                 pub fn release(mut self) -> (Tx<$USARTX>, $dmatxch) {
                     self.stop();
                     unsafe { (*$USARTX::ptr()).ctlr3.modify(|_, w| w.dmat().clear_bit()); }
@@ -885,11 +877,11 @@ macro_rules! serialdma {
 
                     atomic::compiler_fence(Ordering::Release);
 
-                    self.channel.ch().cr.modify(|_, w| { w
+                    self.channel.cfgr().modify(|_, w| unsafe{ w
                         .mem2mem() .clear_bit()
-                        .pl()      .medium()
-                        .msize()   .bits8()
-                        .psize()   .bits8()
+                        .pl()      .bits(0b01)  // 0b01 = medium
+                        .msize()   .bits(0b00)  // 0b00 = 8bit 
+                        .psize()   .bits(0b00)  // 0b00 = 8bit 
                         .circ()    .set_bit()
                         .dir()     .clear_bit()
                     });
@@ -913,11 +905,11 @@ macro_rules! serialdma {
                     self.channel.set_transfer_length(len);
 
                     atomic::compiler_fence(Ordering::Release);
-                    self.channel.ch().cr.modify(|_, w| { w
+                    self.channel.cfgr().modify(|_, w| unsafe{ w
                         .mem2mem() .clear_bit()
-                        .pl()      .medium()
-                        .msize()   .bits8()
-                        .psize()   .bits8()
+                        .pl()      .bits(0b01)  // 0b01 = medium
+                        .msize()   .bits(0b00)  // 0b00 = 8bit 
+                        .psize()   .bits(0b00)  // 0b00 = 8bit 
                         .circ()    .clear_bit()
                         .dir()     .clear_bit()
                     });
@@ -936,18 +928,18 @@ macro_rules! serialdma {
                     // until the end of the transfer.
                     let (ptr, len) = unsafe { buffer.read_buffer() };
 
-                    self.channel.set_peripheral_address(unsafe{ &(*$USARTX::ptr()).dr as *const _ as u32 }, false);
+                    self.channel.set_peripheral_address(unsafe{ &(*$USARTX::ptr()).datar as *const _ as u32 }, false);
 
                     self.channel.set_memory_address(ptr as u32, true);
                     self.channel.set_transfer_length(len);
 
                     atomic::compiler_fence(Ordering::Release);
 
-                    self.channel.ch().cr.modify(|_, w| { w
+                    self.channel.cfgr().modify(|_, w| unsafe { w
                         .mem2mem() .clear_bit()
-                        .pl()      .medium()
-                        .msize()   .bits8()
-                        .psize()   .bits8()
+                        .pl()      .bits(0b01)  // 0b01 = medium
+                        .msize()   .bits(0b00)  // 0b00 = 8bit 
+                        .psize()   .bits(0b00)  // 0b00 = 8bit 
                         .circ()    .clear_bit()
                         .dir()     .set_bit()
                     });
@@ -960,23 +952,23 @@ macro_rules! serialdma {
     }
 }
 
-// serialdma! {
-//     USART1: (
-//         RxDma1,
-//         TxDma1,
-//         dma1::C5,
-//         dma1::C4,
-//     ),
-//     USART2: (
-//         RxDma2,
-//         TxDma2,
-//         dma1::C6,
-//         dma1::C7,
-//     ),
-//     USART3: (
-//         RxDma3,
-//         TxDma3,
-//         dma1::C3,
-//         dma1::C2,
-//     ),
-// }
+serialdma! {
+    USART1: (
+        RxDma1,
+        TxDma1,
+        dma1::C5,
+        dma1::C4,
+    ),
+    USART2: (
+        RxDma2,
+        TxDma2,
+        dma1::C6,
+        dma1::C7,
+    ),
+    USART3: (
+        RxDma3,
+        TxDma3,
+        dma1::C3,
+        dma1::C2,
+    ),
+}

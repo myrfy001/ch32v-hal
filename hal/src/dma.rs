@@ -209,7 +209,7 @@ macro_rules! dma {
                         //     unsafe { &(*$DMAX::ptr()).$chX }
                         // }
 
-                        fn cfgr(&self) -> &$dmaX::$CFGRX {
+                        pub(crate) fn cfgr(&self) -> &$dmaX::$CFGRX {
                             unsafe { &(*$DMAX::ptr()).$cfgrX }
                         }
 
