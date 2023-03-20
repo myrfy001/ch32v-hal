@@ -153,23 +153,34 @@ bus! {
     SDIO => (AHB1, 10),
 }
 
+
 bus! {
     TIM1 => (APB2, 11),
-    TIM5 => (APB1, 3),
-    TIM9 => (APB2, 19),
-}
-
-bus! {
     TIM2 => (APB1, 0),
-    TIM3 => (APB1, 1),
-    TIM4 => (APB1, 2),
-    TIM10 => (APB2, 20),
-    TIM8 => (APB2, 13),
 }
 
-// TODO The PAC crate doesn't contain TIM6/TIM7. Fix them when the pac crate support them
-// bus! {
-//     TIM6 => (APB1, 4),
-//     TIM7 => (APB1, 5),
-// }
 
+#[cfg(feature="tim_adtm_8_9_10")]
+bus! {
+    TIM8 => (APB2, 13),
+    TIM9 => (APB2, 19),
+    TIM10 => (APB2, 20),
+
+}
+
+#[cfg(feature="tim_gptm_3")]
+bus! {
+    TIM3 => (APB1, 1),
+}
+
+#[cfg(feature="tim_gptm_4_5")]
+bus! {
+    TIM4 => (APB1, 2),
+    TIM5 => (APB1, 3),
+}
+
+#[cfg(feature="tim_bctm_6_7")]
+bus! {
+    TIM6 => (APB1, 4),
+    TIM7 => (APB1, 5),
+}

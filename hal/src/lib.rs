@@ -13,6 +13,8 @@ pub mod serial;
 #[cfg(feature = "device-selected")]
 pub mod dma;
 #[cfg(feature = "device-selected")]
+pub mod timer;
+#[cfg(feature = "device-selected")]
 pub mod time;
 
 #[cfg(feature = "device-selected")]
